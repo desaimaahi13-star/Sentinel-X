@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SENTINEL-X | Advanced SOC Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="login-page" class="login-container active">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>🛡️ SENTINEL-X</h1>
+                <p>Advanced SOC Platform</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn-login">Sign In</button>
+                <div id="login-error" class="login-error"></div>
+            </form>
+            <div class="login-footer">
+                <p>Demo Credentials: <strong>admin</strong> / <strong>sentinel123</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD (hidden until login) -->
+    <div id="dashboard-container" class="dashboard-wrapper hidden">
+    <nav class="sidebar">
+        <div class="logo">🛡️ SENTINEL-X</div>
+        <div class="nav-label">Main Operations</div>
+        <button class="nav-btn active" onclick="switchTab('dashboard', event)"><i class="fas fa-chart-line"></i> Global Overview</button>
+        <button class="nav-btn" onclick="switchTab('lab', event)">Analysis Lab</button>
+        <div class="nav-label">System Admin</div>
+        <button class="nav-btn" onclick="switchTab('node', event)"><i class="fas fa-server"></i> Node Health</button>
+        <button class="nav-btn" onclick="switchTab('config', event)"><i class="fas fa-settings"></i> Configuration</button>
+        <div class="status-footer">
+            <span class="pulse"></span> System: Secure
+        </div>
+        <div class="user-section">
+            <span id="user-info" class="user-info"></span>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </nav>
+
+    <main class="viewport">
+        <section id="dashboard" class="page active">
+            <header class="view-header">
+                <h1>Global Threat Intelligence</h1>
+                <div class="time-widget" id="clock">12:00:00 UTC</div>
+            </header>
+
+            <div class="grid-container">
+                <div class="widget kpi">
+                    <h3>Threats Blocked</h3>
+                    <div class="value">1,284</div>
+                    <div class="trend up">+12% vs last 24h</div>
+                </div>
+                <div class="widget kpi">
+                    <h3>Active Scans</h3>
+                    <div class="value" id="active-scans-count">0</div>
+                    <div class="trend">Real-time heuristics</div>
+                </div>
+                <div class="widget kpi">
+                    <h3>Network Health</h3>
+                    <div class="value">99.8%</div>
+                    <div class="trend green">Optimal</div>
+                </div>
+
+                <div class="widget map-box">
+                    <h3>Threat Origin Map</h3>
+                    <div class="placeholder-map">
+                            <canvas id="globe-canvas" aria-label="Threat origin map"></canvas>
+                            <div id="map-legend" class="map-legend">Live threats (simulated)</div>
+                        </div>
+                </div>
+
+                <div class="widget table-box">
+                    <h3>Recent High-Priority Alerts</h3>
+                    <table class="soc-table">
+                        <thead>
+                            <tr><th>Severity</th><th>Source</th><th>Event</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="tag red">Critical</span></td><td>192.168.1.5</td><td>SQL Injection Attempt</td><td>Blocked</td></tr>
+                            <tr><td><span class="tag yellow">Medium</span></td><td>Internal-WS02</td><td>Unauthorized Access</td><td>Triage</td></tr>
+                            <tr><td><span class="tag blue">Info</span></td><td>Admin-Laptop</td><td>Policy Update</td><td>Verified</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="lab" class="page">
+            <header class="view-header">
+                <h1>Binary Analysis Lab</h1>
+            </header>
+            <div class="upload-zone" id="dropZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h2>Drag & Drop Malware Sample</h2>
+                <input type="file" id="fileInput" hidden>
+<button class="btn-primary" id="selectFileBtn">
+    Select Binary
+</button>
+            </div>
+            
+            <div class="analysis-grid">
+                <div class="widget">
+                    <h3>Heuristic Engine Logs</h3>
+                    <div id="analysis-logs" class="terminal-logs"></div>
+                </div>
+                <div id="verdict-container" class="widget verdict-box hidden">
+                    </div>
+            </div>
+        </section>
+
+        <section id="node" class="page">
+            <header class="view-header">
+                <h1>Node Health</h1>
+            </header>
+            <div class="grid-container">
+                <div class="widget">
+                    <h3>Cluster Status</h3>
+                    <div id="node-status">--</div>
+                </div>
+                <div class="widget">
+                    <h3>Average Uptime</h3>
+                    <div id="node-uptime">--</div>
+                </div>
+                <div class="widget">
+                    <h3>Active Nodes</h3>
+                    <div id="node-count">--</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="config" class="page">
+            <header class="view-header">
+                <h1>Configuration</h1>
+            </header>
+            <div class="grid-container">
+                <div class="widget">
+                    <h3>Node Health Settings</h3>
+                    <label for="metrics-interval">Metrics Poll Interval (seconds)</label>
+                    <input id="metrics-interval" type="number" min="1" value="5">
+                    <div style="height:8px"></div>
+                    <label for="vt-api-key">VirusTotal API Key (dev only)</label>
+                    <input id="vt-api-key" type="text" placeholder="Leave empty to use env or skip VT lookups" style="width:100%">
+                    <div style="height:8px"></div>
+                    <button class="btn-primary" id="save-config">Save</button>
+                    <div style="height:8px"></div>
+                    <div id="config-msg" style="color:#9fd3a7"></div>
+                </div>
+
+                <div class="widget">
+                    <h3>Analysis Statistics</h3>
+                    <canvas id="stats-chart" style="max-height:250px;"></canvas>
+                </div>
+
+                <div class="widget">
+                    <h3>Threat Severity Distribution</h3>
+                    <canvas id="severity-chart" style="max-height:250px;"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+    </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
