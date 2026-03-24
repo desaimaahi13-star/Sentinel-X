@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SENTINEL-X | Advanced SOC Platform</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="script.js"></script>
 </head>
 <body>
     <!-- LOGIN PAGE -->
     <div id="login-page" class="login-container active">
         <div class="login-box">
             <div class="login-header">
-                <h1>🛡️ SENTINEL-X</h1>
+                <h1><i class="fas fa-shield-halved" aria-hidden="true"></i> SENTINEL-X</h1>
                 <p>Advanced SOC Platform</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
@@ -28,8 +28,30 @@
                 <button type="submit" class="btn-login">Sign In</button>
                 <div id="login-error" class="login-error"></div>
             </form>
+
+            <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" name="reg-username" required placeholder="Choose username (3-32 chars)">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" name="reg-password" required placeholder="Min 8 characters">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password2">Confirm Password</label>
+                    <input type="password" id="reg-password2" name="reg-password2" required placeholder="Re-enter password">
+                </div>
+                <button type="submit" class="btn-login">Create Account</button>
+                <div id="register-error" class="login-error"></div>
+            </form>
             <div class="login-footer">
                 <p>Demo Credentials: <strong>admin</strong> / <strong>sentinel123</strong></p>
+                <p>
+                    <a href="#" id="show-register">Create account</a>
+                    <span style="opacity:.5">|</span>
+                    <a href="#" id="show-login" class="hidden">Back to login</a>
+                </p>
             </div>
         </div>
     </div>
@@ -37,10 +59,10 @@
     <!-- MAIN DASHBOARD (hidden until login) -->
     <div id="dashboard-container" class="dashboard-wrapper hidden">
     <nav class="sidebar">
-        <div class="logo">🛡️ SENTINEL-X</div>
+        <div class="logo"><i class="fas fa-shield-halved" aria-hidden="true"></i> SENTINEL-X</div>
         <div class="nav-label">Main Operations</div>
         <button class="nav-btn active" onclick="switchTab('dashboard', event)"><i class="fas fa-chart-line"></i> Global Overview</button>
-        <button class="nav-btn" onclick="switchTab('lab', event)">Analysis Lab</button>
+        <button class="nav-btn" onclick="switchTab('lab', event)"><i class="fas fa-microscope"></i> Analysis Lab</button>
         <div class="nav-label">System Admin</div>
         <button class="nav-btn" onclick="switchTab('node', event)"><i class="fas fa-server"></i> Node Health</button>
         <button class="nav-btn" onclick="switchTab('config', event)"><i class="fas fa-settings"></i> Configuration</button>
@@ -98,6 +120,18 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="widget table-box">
+                    <h3>Recent Analyses (All Users)</h3>
+                    <table class="soc-table">
+                        <thead>
+                            <tr><th>File</th><th>Kind</th><th>Status</th><th>Score</th><th>User</th><th>Time</th></tr>
+                        </thead>
+                        <tbody id="recent-analyses-body">
+                            <tr><td colspan="6">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -114,15 +148,29 @@
 </button>
             </div>
             
-            <div class="analysis-grid">
-                <div class="widget">
-                    <h3>Heuristic Engine Logs</h3>
-                    <div id="analysis-logs" class="terminal-logs"></div>
+             <div class="analysis-grid">
+                 <div class="widget">
+                     <h3>Heuristic Engine Logs</h3>
+                     <div id="analysis-logs" class="terminal-logs"></div>
+                 </div>
+                 <div id="verdict-container" class="widget verdict-box hidden">
+                     </div>
+             </div>
+
+            <div class="grid-container" style="margin-top:16px">
+                <div class="widget table-box">
+                    <h3>Recent Uploaded Files</h3>
+                    <table class="soc-table" id="uploads-table">
+                        <thead>
+                            <tr><th>File</th><th>SHA256</th><th>Device</th><th>Time</th></tr>
+                        </thead>
+                        <tbody id="uploads-tbody">
+                            <tr><td colspan="4">No uploads yet</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div id="verdict-container" class="widget verdict-box hidden">
-                    </div>
             </div>
-        </section>
+         </section>
 
         <section id="node" class="page">
             <header class="view-header">
@@ -175,7 +223,6 @@
         </section>
     </main>
     </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+    <script src="script.js?v=20260324-3"></script>
+  </body>
 </html>

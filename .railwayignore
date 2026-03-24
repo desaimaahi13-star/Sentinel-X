@@ -1,0 +1,16 @@
+node_modules/
+.git/
+.flyconfig/
+
+# Local SQLite files (can be locked on Windows; use Railway Volume + DATA_DIR instead)
+data.db
+data.db-shm
+data.db-wal
+*.db
+*.db-shm
+*.db-wal
+
+# Local-only config (use Railway Variables / secrets)
+config.json
+.env
+

@@ -5,18 +5,28 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "db:inspect": "node scripts/db_inspect.js",
+    "db:logins": "node scripts/show_login_events.js",
+    "db:uploads": "node scripts/show_uploads.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.5",
-    "better-sqlite3": "^12.6.2",
+    "bcryptjs": "^3.0.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.1.0",
     "multer": "^2.0.2",
     "ws": "^8.19.0"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^12.6.2"
   }
 }
